@@ -24,8 +24,8 @@ SERIAL1_PROTOCOL = 1     # 使用MAVLink v1协议
 ```
 # 0.69寸96x16显示屏接线如下  
 显示屏引脚 &nbsp; &nbsp; &nbsp; ESP32引脚  
-SCL/SCK &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1  
-SDA &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2  
+SCL/SCK &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 43  
+SDA &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 42  
 VCC &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3V3  
 GND &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; GND  
 

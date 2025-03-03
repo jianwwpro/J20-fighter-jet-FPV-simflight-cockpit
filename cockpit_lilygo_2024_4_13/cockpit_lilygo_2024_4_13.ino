@@ -47,7 +47,7 @@ U8G2_SSD1306_72X40_ER_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 41, /* data=*/ 40, /* r
 
 
 //定义最上方副显示屏（1号屏）的虚拟对象，起名u8g1。1号屏用硬件I2C协议，FPS高，用于显示电流数据。
-U8G2_SSD1306_96X16_ER_F_HW_I2C u8g1(U8G2_R0, /* reset=*/ U8X8_PIN_NONE, /* clock=*/ 1, /* data=*/ 2);
+U8G2_SSD1306_96X16_ER_F_HW_I2C u8g1(U8G2_R0, /* reset=*/ U8X8_PIN_NONE, /* clock=*/ 43, /* data=*/ 42);
 
 
 void setup() {
