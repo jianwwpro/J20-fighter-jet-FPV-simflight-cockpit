@@ -65,30 +65,44 @@ void draw_mid(){
   spr_mid.loadFont(Final_Frontier_28);
   spr_mid.fillRect(55, 10, 35, 30, BLACK);
   spr_mid.setCursor(55, 10); spr_mid.print(satellites_visible);
-  // spr_mid.fillRect(130, 10, 70, 30, BLACK);
   time_str = String(time_boot_ms/1000/60)+":"+String(time_boot_ms/1000%60);
   spr_mid.drawString(time_str, 130, 10);
   spr_mid.unloadFont();
-//current_consumed 电量状态条，4000mah为100%
-  spr_mid.drawRect(170, 55, 20, 120,GREEN);
-  spr_mid.fillRect(170, 55+current_consumed*120/4000, 20, 120-current_consumed*120/4000, GREEN);
-//油门状态条
+
+
+  // 计算电量百分比
+  battery_percentage = (BATTERY_CAPACITY - current_consumed) * 100 / BATTERY_CAPACITY;
+  if(battery_percentage > 100) battery_percentage = 100;
+  
+  // 电量状态条，使用BATTERY_CAPACITY作为满电量参考
+  spr_mid.drawRect(170, 55, 20, 120, GREEN);
+  // 根据剩余电量显示不同颜色
+  uint16_t bar_color = GREEN;
+  if(battery_percentage <= BATTERY_WARN_LEVEL) {
+    bar_color = RED;  // 低电量显示红色
+  }
+  int32_t bar_height = 120 * current_consumed / BATTERY_CAPACITY;
+  if(bar_height > 120) bar_height = 120;
+  spr_mid.fillRect(170, 55+bar_height, 20, 120-bar_height, bar_color);
+
+  //油门状态条
   spr_mid.drawRect(13, 55, 20, 120, GREEN);
   spr_mid.fillRect(13, 55+120-throttle*120/100, 20, throttle*120/100, GREEN);
 
-
   spr_mid.setTextColor(WHITE, BLACK);
   spr_mid.loadFont(cn_ht_26);
-  spr_mid.drawString("油",10,185); //从左上角开始计算坐标
-  spr_mid.drawString("门",10,215); //从左上角开始计算坐标
-  spr_mid.drawString("电",165,185); //从左上角开始计算坐标
-  spr_mid.drawString("量",165,215); //从左上角开始计算坐标
+  spr_mid.drawString("油",10,185);
+  spr_mid.drawString("门",10,215);
+  spr_mid.drawString("电",165,185);
+  spr_mid.drawString("量",165,215);
+  // // 添加电量百分比显示
+  // spr_mid.setCursor(165, 165);
+  // spr_mid.print(battery_percentage);
+  // spr_mid.print("%");
 
   spr_mid.fillSmoothRoundRect(45,190, 109, 50, 6, BLUE, TFT_BLACK);
-  spr_mid.drawString("系统状态", 50, 195); //从左上角开始计算坐标
+  spr_mid.drawString("系统状态", 50, 195);
   spr_mid.setCursor(50, 220); 
   spr_mid.print(system_status_str);
-  // spr_mid.setCursor(50, 220); spr_mid.print("rssi:");spr_mid.print(rssi)
-  // spr_mid.print("FPS:");spr_mid.print(fps0);
   spr_mid.unloadFont();
 }

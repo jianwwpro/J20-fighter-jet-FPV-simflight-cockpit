@@ -19,10 +19,11 @@
 
 #include "tftespi_cn_fonts.h"
 #include "tftespi_en_fonts.h"
-#include "j20_109_182.h" //歼20图标
+#include "j20_109_182.h" //飞机图标
 #include "salt_45_43.h" //GPS卫星图标
 
-
+#define EXAMPLE_LCD_H_RES     536  // 屏幕总宽度
+#define EXAMPLE_LCD_V_RES     240  // 屏幕总高度
 
 // 双核运行所需handle，用于追踪执行情况
 TaskHandle_t Task1;
@@ -65,16 +66,19 @@ void setup() {
   Serial.begin(115200);
   Serial.setRxBufferSize(2048); // 增加接收缓冲区大小
 
-  spr.createSprite(165, 240);  //attitude indicator
-  spr_meters.createSprite(80, 240);
-  spr_meters_2.createSprite(80, 240);
-  spr_jet.createSprite(109, 182);
-  spr_mid.createSprite(200, 240);
-  spr_status.createSprite(109, 53);
-  spr_right_bar.createSprite(50, 180);
-  spr_left_bar.createSprite(50, 180);
-  spr_right_rec.createSprite(80, 40);
-  spr_left_rec.createSprite(80, 40);
+  spr.createSprite(165, 240);  //左侧姿态仪区域
+
+  spr_meters.createSprite(80, 240);//左侧仪表，空速、地速、高度
+  spr_meters_2.createSprite(80, 240);//右侧仪表，电量、电压、亮度
+  
+  spr_jet.createSprite(109, 182);//飞机图标
+
+  spr_mid.createSprite(200, 240);//中间区域
+  spr_status.createSprite(109, 53);//右侧状态栏
+  spr_right_bar.createSprite(50, 180);//右侧栏
+  spr_left_bar.createSprite(50, 180);//左侧栏
+  spr_right_rec.createSprite(80, 40);//右侧矩形
+  spr_left_rec.createSprite(80, 40);//左侧矩形
 
 
 xTaskCreatePinnedToCore(

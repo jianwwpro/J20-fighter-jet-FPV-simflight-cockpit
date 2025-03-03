@@ -192,3 +192,8 @@ unsigned long fps1 = 0;
 unsigned long fps2 = 0;
 unsigned long fps3 = 0;
 volatile bool mavlink_data_ready = false;
+
+// 电池容量相关参数
+const uint16_t BATTERY_CAPACITY = 4000;  // 电池容量，单位mAh
+const uint16_t BATTERY_WARN_LEVEL = 20;  // 电量警告阈值，单位%
+uint8_t battery_percentage = 0;          // 当前电量百分比
