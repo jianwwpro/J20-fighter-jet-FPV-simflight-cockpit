@@ -3,12 +3,91 @@ void draw_new_attitude(){
   //覆盖原姿态线
   spr.fillRect(1,1,x_limit-1,y_limit-1,GREEN);  
   spr.fillTriangle(xb5,yb5,xb6,yb6,xb7,yb7,BLUE);
-  spr.fillTriangle(xb8,yb8,xb6,yb6,xb7,yb7,BLUE);
+  //spr.fillTriangle(xb8,yb8,xb6,yb6,xb7,yb7,BLUE);
+  
+  // 绘制罗盘仪
+  const int compass_center_x = x_limit/2;
+  const int compass_center_y = 75;  // 罗盘中心Y坐标
+  const int compass_radius = 70;    // 罗盘半径
+  const int tick_length = 8;        // 刻度线长度
+  
+  // 绘制罗盘外弧
+  const float arc_start = 110;  // 弧形开始角度
+  const float arc_end = 250;    // 弧形结束角度
+  spr.drawSmoothArc(compass_center_x, compass_center_y, compass_radius, compass_radius-2, arc_start, arc_end, WHITE, BLACK, false);
+  
+  // 固定的指示标（位于正上方）
+  const int triangle_size = 6;
+  const int triangle_base_y = compass_center_y - compass_radius + 2;
+  spr.fillTriangle(
+    compass_center_x, triangle_base_y,
+    compass_center_x - triangle_size, triangle_base_y + triangle_size,
+    compass_center_x + triangle_size, triangle_base_y + triangle_size,
+    RED
+  );
+  
+  // 计算罗盘旋转角度
+  float compass_rotation = radians(heading);
+  
+  // 绘制旋转的刻度和标签（360度）
+  for(int base_angle = 0; base_angle < 360; base_angle += 30) {
+    // 计算实际旋转后的角度
+    float rotated_angle = radians(base_angle) - compass_rotation;
+    
+    // 将角度转换到弧形显示范围（110-250度）
+    float display_angle = fmod(degrees(PI-rotated_angle) + 360, 360);
+    
+    // 检查是否在可见弧形范围内
+    if(display_angle >= arc_start && display_angle <= arc_end) {
+      // 计算刻度线的起点和终点
+      int start_x = compass_center_x + cos(PI-rotated_angle) * compass_radius;
+      int start_y = compass_center_y - sin(PI-rotated_angle) * compass_radius;
+      int end_x = compass_center_x + cos(PI-rotated_angle) * (compass_radius - tick_length);
+      int end_y = compass_center_y - sin(PI-rotated_angle) * (compass_radius - tick_length);
+      
+      spr.drawLine(start_x, start_y, end_x, end_y, WHITE);
+      
+      // 添加方向标签
+      spr.setTextColor(WHITE);
+      spr.setTextSize(1);
+      
+      // 计算标签位置
+      int label_x = compass_center_x + cos(PI-rotated_angle) * (compass_radius - 15);
+      int label_y = compass_center_y - sin(PI-rotated_angle) * (compass_radius - 15);
+      
+      // 根据基准角度确定显示的方向标签
+      String direction = "";
+      if(base_angle == 0) {
+        direction = "N";
+      } else if(base_angle == 90) {
+        direction = "E";
+      } else if(base_angle == 180) {
+        direction = "S";
+      } else if(base_angle == 270) {
+        direction = "W";
+      } else {
+        direction = String(base_angle);
+      }
+      
+      // 调整标签位置以避免重叠
+      int label_offset = direction.length() > 1 ? 8 : 4;
+      spr.drawString(direction, label_x-label_offset, label_y-4);
+    }
+  }
+  
+  // 显示数字航向角
+  spr.setTextColor(WHITE);
+  spr.loadFont(NotoSansMonoSCB20);
+  String heading_str = String(heading);
+  int text_width = heading_str.length() * 12;
+  spr.setCursor(compass_center_x - text_width/2, compass_center_y - 8);
+  spr.print(heading_str);
+  spr.unloadFont();
+
+  // 原有的姿态仪代码
   spr.loadFont(NotoSansMonoSCB20);  
 
-  
-// 画出i范围level的新的姿态线, i的范围是0-6，
-
+  // 画出i范围level的新的姿态线, i的范围是0-6，
   spr.drawRect(0,0,x_limit,y_limit,YELLOW);//画出姿态线的框框
   spr.fillTriangle(x_center, y_center,x_center-35,y_center+9,x_center+35,y_center+9, RED);//画出飞机标记
   
@@ -27,7 +106,7 @@ void draw_new_attitude(){
       spr.drawWideLine(xb1, yb1, xb2, yb2, 4, color); //画一根长的地平线
     } else {
         if((att_points[i][0]>1) && (att_points[i][0]<x_limit) && (att_points[i][1]>1)  && (att_points[i][1]<y_limit) && (att_points[i][2]>1) && (att_points[i][2]<x_limit)  && (att_points[i][3]>1) && (att_points[i][3]<y_limit) ) {
-          spr.drawWideLine(att_points[i][0], att_points[i][1], att_points[i][2], att_points[i][3], 4, color);
+          spr.drawWideLine(att_points[i][0], att_points[i][1], att_points[i][2], att_points[i][3], 2, color);
         }       
       } //else
 
@@ -36,7 +115,7 @@ void draw_new_attitude(){
       spr.drawWideLine(xb3, yb3, xb4, yb4, 4, color); //画一根长的地平线
       } else {
         if((att_points[i][4]>1) && (att_points[i][4]<x_limit) && (att_points[i][5]>1)  && (att_points[i][5]<y_limit) && (att_points[i][6]>1) && (att_points[i][6]<x_limit)  && (att_points[i][7]>1) && (att_points[i][7]<y_limit) )  {          
-          spr.drawWideLine(att_points[i][4], att_points[i][5], att_points[i][6], att_points[i][7], 4, color);
+          spr.drawWideLine(att_points[i][4], att_points[i][5], att_points[i][6], att_points[i][7], 2, color);
           
         }
       }//else  
