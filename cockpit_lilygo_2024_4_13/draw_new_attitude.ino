@@ -12,8 +12,8 @@ void draw_new_attitude(){
   const int tick_length = 8;        // 刻度线长度
   
   // 绘制罗盘外弧
-  const float arc_start = 110;  // 弧形开始角度
-  const float arc_end = 250;    // 弧形结束角度
+  const float arc_start = 120;  // 弧形开始角度
+  const float arc_end = 240;    // 弧形结束角度
   spr.drawSmoothArc(compass_center_x, compass_center_y, compass_radius, compass_radius-2, arc_start, arc_end, YELLOW, BLACK, false);
   
   /*
@@ -40,7 +40,7 @@ void draw_new_attitude(){
     float display_angle = fmod(degrees(PI-rotated_angle) + 360, 360);
     
     // 只在弧度线范围内显示刻度
-    if(display_angle >= 10 && display_angle <= 170) {
+    if(display_angle >= 30 && display_angle <= 150) {
       // 计算刻度线的起点和终点
       int start_x = compass_center_x + cos(PI-rotated_angle) * compass_radius;
       int start_y = compass_center_y - sin(PI-rotated_angle) * compass_radius;
@@ -142,7 +142,7 @@ void draw_new_attitude(){
   // old_base_vect = base_vect;
   //记得手动改颜色
 
-
+/*
    // 显示数字航向角（红色）
   spr.setTextColor(RED);
   spr.loadFont(NotoSansMonoSCB20);
@@ -151,7 +151,7 @@ void draw_new_attitude(){
   spr.setCursor(compass_center_x - text_width/2, compass_center_y - compass_radius + 130);
   spr.print(heading_str);
   spr.unloadFont();
-  
+  */
 }
 
 
