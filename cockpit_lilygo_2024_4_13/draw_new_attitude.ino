@@ -3,7 +3,7 @@ void draw_new_attitude(){
   //覆盖原姿态线
   spr.fillRect(1,1,x_limit-1,y_limit-1,GREEN);  
   spr.fillTriangle(xb5,yb5,xb6,yb6,xb7,yb7,BLUE);
-  //spr.fillTriangle(xb8,yb8,xb6,yb6,xb7,yb7,BLUE);
+  spr.fillTriangle(xb8,yb8,xb6,yb6,xb7,yb7,BLUE);
   
   // 绘制罗盘仪
   const int compass_center_x = x_limit/2;
@@ -14,8 +14,9 @@ void draw_new_attitude(){
   // 绘制罗盘外弧
   const float arc_start = 110;  // 弧形开始角度
   const float arc_end = 250;    // 弧形结束角度
-  spr.drawSmoothArc(compass_center_x, compass_center_y, compass_radius, compass_radius-2, arc_start, arc_end, WHITE, BLACK, false);
+  spr.drawSmoothArc(compass_center_x, compass_center_y, compass_radius, compass_radius-2, arc_start, arc_end, YELLOW, BLACK, false);
   
+  /*
   // 固定的指示标（位于正上方）
   const int triangle_size = 6;
   const int triangle_base_y = compass_center_y - compass_radius + 2;
@@ -25,39 +26,43 @@ void draw_new_attitude(){
     compass_center_x + triangle_size, triangle_base_y + triangle_size,
     RED
   );
+  */
   
   // 计算罗盘旋转角度
-  float compass_rotation = radians(heading);
+  float compass_rotation = radians(heading-90);
   
-  // 绘制旋转的刻度和标签（360度）
-  for(int base_angle = 0; base_angle < 360; base_angle += 30) {
+  // 绘制旋转的刻度和标签
+  for(float base_angle = 0; base_angle < 360; base_angle += 30) {
     // 计算实际旋转后的角度
     float rotated_angle = radians(base_angle) - compass_rotation;
     
-    // 将角度转换到弧形显示范围（110-250度）
+    // 计算显示角度（用于判断是否在可见范围内）
     float display_angle = fmod(degrees(PI-rotated_angle) + 360, 360);
     
-    // 检查是否在可见弧形范围内
-    if(display_angle >= arc_start && display_angle <= arc_end) {
+    // 只在弧度线范围内显示刻度
+    if(display_angle >= 10 && display_angle <= 170) {
       // 计算刻度线的起点和终点
       int start_x = compass_center_x + cos(PI-rotated_angle) * compass_radius;
       int start_y = compass_center_y - sin(PI-rotated_angle) * compass_radius;
       int end_x = compass_center_x + cos(PI-rotated_angle) * (compass_radius - tick_length);
       int end_y = compass_center_y - sin(PI-rotated_angle) * (compass_radius - tick_length);
       
-      spr.drawLine(start_x, start_y, end_x, end_y, WHITE);
+      spr.drawLine(start_x, start_y, end_x, end_y, YELLOW);
       
       // 添加方向标签
-      spr.setTextColor(WHITE);
+      spr.setTextColor(YELLOW);
       spr.setTextSize(1);
       
       // 计算标签位置
       int label_x = compass_center_x + cos(PI-rotated_angle) * (compass_radius - 15);
       int label_y = compass_center_y - sin(PI-rotated_angle) * (compass_radius - 15);
       
-      // 根据基准角度确定显示的方向标签
+      // 计算实际航向角度
+      int actual_heading = int(fmod(base_angle - degrees(compass_rotation) + 360, 360));
+      
+      // 根据实际航向角度确定显示的方向标签
       String direction = "";
-      if(base_angle == 0) {
+      if(base_angle == 0 || base_angle == 360) {
         direction = "N";
       } else if(base_angle == 90) {
         direction = "E";
@@ -66,7 +71,7 @@ void draw_new_attitude(){
       } else if(base_angle == 270) {
         direction = "W";
       } else {
-        direction = String(base_angle);
+        direction = String(base_angle,0);
       }
       
       // 调整标签位置以避免重叠
@@ -75,14 +80,7 @@ void draw_new_attitude(){
     }
   }
   
-  // 显示数字航向角
-  spr.setTextColor(WHITE);
-  spr.loadFont(NotoSansMonoSCB20);
-  String heading_str = String(heading);
-  int text_width = heading_str.length() * 12;
-  spr.setCursor(compass_center_x - text_width/2, compass_center_y - 8);
-  spr.print(heading_str);
-  spr.unloadFont();
+ 
 
   // 原有的姿态仪代码
   spr.loadFont(NotoSansMonoSCB20);  
@@ -143,6 +141,17 @@ void draw_new_attitude(){
   // old_xb1=xb1 , old_xb2=xb2, old_xb3=xb3, old_xb4=xb4, old_yb1=yb1, old_yb2=yb2, old_yb3=yb3, old_yb4=yb4;
   // old_base_vect = base_vect;
   //记得手动改颜色
+
+
+   // 显示数字航向角（红色）
+  spr.setTextColor(RED);
+  spr.loadFont(NotoSansMonoSCB20);
+  String heading_str = String(heading);
+  int text_width = heading_str.length() * 12;
+  spr.setCursor(compass_center_x - text_width/2, compass_center_y - compass_radius + 130);
+  spr.print(heading_str);
+  spr.unloadFont();
+  
 }
 
 
