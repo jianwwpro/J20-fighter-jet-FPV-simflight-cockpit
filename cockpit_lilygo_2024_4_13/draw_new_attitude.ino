@@ -1,9 +1,12 @@
 void draw_new_attitude(){
 
   //覆盖原姿态线
-  spr.fillRect(1,1,x_limit-1,y_limit-1,GREEN);  
-  spr.fillTriangle(xb5,yb5,xb6,yb6,xb7,yb7,BLUE);
-  spr.fillTriangle(xb8,yb8,xb6,yb6,xb7,yb7,BLUE);
+  //spr.fillRect(1,1,x_limit-1,y_limit-1,GREEN);  
+  // spr.fillTriangle(xb5,yb5,xb6,yb6,xb7,yb7,BLUE);
+  // spr.fillTriangle(xb8,yb8,xb6,yb6,xb7,yb7,BLUE);
+  spr.fillRect(1,1,x_limit-1,y_limit-1,0xC460);  //地面土黄色
+  spr.fillTriangle(xb5,yb5,xb6,yb6,xb7,yb7,0x5D1C); //天空淡绿色
+  spr.fillTriangle(xb8,yb8,xb6,yb6,xb7,yb7,0x5D1C); //天空淡绿色
   
   // 绘制罗盘仪
   const int compass_center_x = x_limit/2;
